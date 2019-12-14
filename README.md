@@ -92,7 +92,9 @@ This project needs voltdb-schemabuilder.
  
  An example would be:
  
- ```TaskMigrateDemoClient 192.168.0.50,192.168.0.51 50000 10000000 1800````
+ ```
+ TaskMigrateDemoClient 192.168.0.50,192.168.0.51 50000 10000000 1800
+ ````
  
  
  
