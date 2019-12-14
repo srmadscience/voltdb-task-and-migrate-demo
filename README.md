@@ -18,6 +18,9 @@ We have the following tables, views and export streams:
 | Name | Type | Purpose |
 | ---  | ---  | ---     |
 | Drones | Table | Master table for drones. Used for tracking when to declare it missing. |
+| Important_Locations | Table | Places in Central London we want to keep an eye on |
+| drone_locations | Table keeping last 10 position reports for each drone. Extra rows are MIGRATED to old_drone_locations_tgt |
+| 
 
 
 ````
