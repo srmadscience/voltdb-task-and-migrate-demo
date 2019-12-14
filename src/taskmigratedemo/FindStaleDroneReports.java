@@ -111,13 +111,9 @@ public class FindStaleDroneReports extends VoltProcedure {
                 }
 
                 voltExecuteSQL(true);
-            }else {
-                System.out.println("max date is null");
             }
 
-        } else {
-            System.out.println("No max date in past");
-        }
+        } 
 
         return results;
     }
