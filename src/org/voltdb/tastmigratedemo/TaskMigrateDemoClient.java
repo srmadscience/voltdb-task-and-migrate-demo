@@ -216,11 +216,11 @@ public class TaskMigrateDemoClient {
         msg("Parameters:" + Arrays.toString(args));
 
         final String hostnames = args[0];
-        long startTps = Integer.parseInt(args[1]);
+        long tps = Integer.parseInt(args[1]);
         final int size = Integer.parseInt(args[2]);
         final int seconds = Integer.parseInt(args[3]);
 
-        TaskMigrateDemoClient ccMakeData = new TaskMigrateDemoClient(hostnames, 42, seconds, startTps, size);
+        TaskMigrateDemoClient ccMakeData = new TaskMigrateDemoClient(hostnames, 42, seconds, tps, size);
         try {
             ccMakeData.createSchemaIfNeeded();
         } catch (Exception e) {

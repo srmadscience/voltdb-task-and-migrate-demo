@@ -52,6 +52,10 @@ This finds any drones that have failed to report for too long a time period and 
 
 See here.
 
+### Dependencies
+
+This project needs voltdb-schemabuilder.
+
 ### Configure Export Streams
 
 
@@ -76,6 +80,15 @@ See here.
  ````
  
  ### Run the code
+ 
+ The client program is called TaskMigrateDemoClient and takes the following parameters:
+ 
+ | Parameter | Purpose | Example |
+ | ---       | ---     | ---     |
+ | hostnames | comma delimited list of VoltDB hosts | 127.0.0.1 |
+ | tps | How many transactions per second to generaye | 30000 |
+ | size | How many drones to track | 1000000 |
+ | seconds | How many seconds to run for | 180 |
  
  
  
