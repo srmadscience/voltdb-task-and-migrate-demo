@@ -24,9 +24,35 @@ We have the following tables, views and export streams:
 |  location_incursions | Export Stream | We add a record every time a drone gets too close to a location mentioned in Important_locations |
 | old_drone_locations_tgt | Export Stream | Where old drone_location records go. Defined in the DDL for DRONE_LOCATIONS |
 | drone_activity | View | Shows how many drones have reported positions over the last few minutes |
-| missing_drone_stats | Shows how many drones will be declared missing over the next few minutes if we don't get a location report |
-| missing_drone_maxdate | A single row that tells us whether we need to search for missing drones |
-| latest_drone_activity | A summary showing the latest location report time for each drone |
+| missing_drone_stats | View | Shows how many drones will be declared missing over the next few minutes if we don't get a location report |
+| missing_drone_maxdate | View | A single row that tells us whether we need to search for missing drones |
+| latest_drone_activity | View | A summary showing the latest location report time for each drone |
+
+
+## Procedures
+
+The application has two stored procedures
+
+### ReportLocation
+
+This takes a position report for a drone and updates the database. It also:
+
+* Checks to see if the drone is too close to an important_location.
+* MIGRATES any extra drone_location records
+
+This is called repeatedly from the demo's client program.
+
+### FindStaleDroneReports
+
+This finds any drones that have failed to report for too long a time period and writes a message to missing_drone_stats. It also updates the drone record to prevent duplicate reports.
+
+## Installation and setup
+
+### VoltDB
+
+See here.
+
+### Configure Export Streams
 
 
 ````
@@ -48,4 +74,8 @@ We have the following tables, views and export streams:
         </configuration>
     </export>
  ````
+ 
+ ### Run the code
+ 
+ 
  
