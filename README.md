@@ -90,5 +90,10 @@ This project needs voltdb-schemabuilder.
  | size | How many drones to track | 1000000 |
  | seconds | How many seconds to run for | 180 |
  
+ An example would be:
+ 
+ ```TaskMigrateDemoClient 192.168.0.50,192.168.0.51 50000 10000000 1800````
+ 
+ 
  
  
