@@ -87,7 +87,7 @@ public class FindStaleDroneReports extends VoltProcedure {
             final TimestampType maxDate = results[0].getTimestampAsTimestamp("declare_missing_date");
 
             if (maxDate != null) {
-                System.out.println("X" + maxDate.toString());
+  
                 // find the first MAX_DRONES_PER_PASS missing drones...
                 voltQueueSQL(findMissingDrones, maxDate, maxDate, MAX_DRONES_PER_PASS);
                 results = voltExecuteSQL();
