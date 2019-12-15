@@ -58,6 +58,12 @@ This project needs voltdb-schemabuilder.
 
 ### Configure Export Streams
 
+In order to fully observe the functionality of this demo you'll need to get export up and running. This can be done in two ways
+
+#### Configure Streams from within the VoltDB GUI
+
+#### Configure streams by shutting down the database and editing deployment.xml
+
 
 ````
  <export>

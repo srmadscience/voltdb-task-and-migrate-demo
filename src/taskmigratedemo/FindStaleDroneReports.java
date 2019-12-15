@@ -101,8 +101,7 @@ public class FindStaleDroneReports extends VoltProcedure {
                     final long speedMps = results[0].getLong("DRONE_SPEED_MPS");
 
                     // Mark drone as 'missing' so we don't find it again on the
-                    // next
-                    // pass
+                    // next pass
                     voltQueueSQL(updateDrone, droneId);
 
                     // Report it as missing by adding it to the 'missing_drones'
