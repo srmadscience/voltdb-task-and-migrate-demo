@@ -52,7 +52,7 @@ This is called repeatedly from the demo's client program.
 
 ### VoltDB
 
-See [here](https://www.voltdb.com/try-voltdb/).
+To obtain VoltDB see [here](https://www.voltdb.com/try-voltdb/).
 
 ### Dependencies
 
@@ -199,6 +199,13 @@ HOW_MANY
     69825
 ````
 
+ When running the 'Db Monitor' tab of the VoltDB GUI should look like this:
  
+![db  monitor](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/doc/tables_and_procedures_when_running.png)
+
+As the demo progresses the Export tab will show records being written:
+
+![export_tab](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/doc/tables_and_procedures_when_running.png)
+
  
  
