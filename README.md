@@ -104,7 +104,7 @@ An alternative approach is to shut down VoltDB and then add the following entrie
  | Parameter | Purpose | Example |
  | ---       | ---     | ---     |
  | hostnames | comma delimited list of VoltDB hosts | 127.0.0.1 |
- | tps | How many transactions per second to generaye | 30000 |
+ | tps | How many transactions per second to generate | 30000 |
  | size | How many drones to track | 1000000 |
  | seconds | How many seconds to run for | 180 |
  
@@ -114,6 +114,91 @@ An alternative approach is to shut down VoltDB and then add the following entrie
  TaskMigrateDemoClient 192.168.0.50,192.168.0.51 50000 10000000 1800
  ````
  
+ When running it calls the procedure [GetStatus]() every 100,000 iterations, so you can see aggregate information about what is going on.
+ 
+ The first time it runs it starts by creating all the objects needed:
+ 
+ ````
+ 2019-12-16 08:54:32:Parameters:[127.0.0.1, 30000, 10000000, 1800]
+2019-12-16 08:54:32:Logging into VoltDB
+2019-12-16 08:54:32:Connect to 127.0.0.1...
+2019-12-16 08:54:32:Creating JAR file in /var/folders/_0/ps5gxckx3_lf5vc9jr4gz3yc0000gp/T/voltdbSchema4228325282647337994/taskMigrateProcs.jar
+2019-12-16 08:54:32:processing /taskmigratedemo/ReportLocation.class
+2019-12-16 08:54:32:
+2019-12-16 08:54:32:processing /taskmigratedemo/FindStaleDroneReports.class
+2019-12-16 08:54:32:
+2019-12-16 08:54:32:Calling @UpdateClasses to load JAR file containing procedures
+2019-12-16 08:54:33:create table important_locations (location_name varchar(20) not null primary key ,location_latlong GEOGRAPHY_POINT not null ,location_exclusion_zone_radius_m integer not null);
+2019-12-16 08:54:33:
+2019-12-16 08:54:33:CREATE TABLE drones (drone_id bigint not null primary key, declare_missing_date timestamp);
+2019-12-16 08:54:33:
+2019-12-16 08:54:33:PARTITION TABLE drones ON COLUMN drone_id;
+2019-12-16 08:54:33:
+2019-12-16 08:54:33:CREATE INDEX drone_idx1 ON drones (declare_missing_date);
+2019-12-16 08:54:33:
+2019-12-16 08:54:33:CREATE TABLE drone_locations MIGRATE TO TARGET old_drone_locations_tgt (drone_id bigint not null ,event_timestamp timestamp not null ,drone_location GEOGRAPHY_POINT not null ,drone_speed_mps integer not null ,location_is_stale integer ,primary key (drone_id, event_timestamp));
+2019-12-16 08:54:33:
+2019-12-16 08:54:34:PARTITION TABLE drone_locations ON COLUMN drone_id;
+2019-12-16 08:54:34:
+2019-12-16 08:54:34:CREATE INDEX drone_location_ts_idx ON drone_locations (drone_id, event_timestamp);
+2019-12-16 08:54:34:
+2019-12-16 08:54:34:CREATE STREAM missing_drones PARTITION ON COLUMN drone_id EXPORT TO TARGET tgt_missing_drones(drone_id bigint not null ,event_timestamp timestamp not null ,drone_location GEOGRAPHY_POINT not null ,drone_speed_mps integer not null ,location_is_stale integer);
+2019-12-16 08:54:34:
+2019-12-16 08:54:35:CREATE STREAM location_incursions PARTITION ON COLUMN drone_id EXPORT TO TARGET location_incursions_tgt  (drone_id bigint not null ,event_timestamp timestamp not null ,drone_location GEOGRAPHY_POINT not null ,drone_speed_mps integer not null ,location_name varchar(20) not null ,distance_from_metres bigint not null );
+2019-12-16 08:54:35:
+2019-12-16 08:54:35:CREATE VIEW drone_activity AS SELECT TRUNCATE(MINUTE, event_timestamp) activity_minute, COUNT(*) HOW_MANY FROM drone_locations GROUP BY TRUNCATE(MINUTE, event_timestamp);
+2019-12-16 08:54:35:
+2019-12-16 08:54:35:CREATE VIEW missing_drone_stats AS SELECT TRUNCATE(MINUTE, declare_missing_date) declare_missing_date, COUNT(*) HOW_MANY FROM drones GROUP BY TRUNCATE(MINUTE, declare_missing_date);
+2019-12-16 08:54:35:
+2019-12-16 08:54:35:CREATE VIEW missing_drone_maxdate AS SELECT MAX(declare_missing_date) declare_missing_date FROM drones;
+2019-12-16 08:54:35:
+2019-12-16 08:54:36:CREATE VIEW latest_drone_activity AS SELECT drone_id, max(event_timestamp) event_timestamp FROM   drone_locations GROUP BY drone_id;
+2019-12-16 08:54:36:
+2019-12-16 08:54:36:CREATE INDEX lda_index1 ON latest_drone_activity(event_timestamp, drone_id); 
+2019-12-16 08:54:36:
+2019-12-16 08:54:36:CREATE PROCEDURE PARTITION ON TABLE drone_locations COLUMN drone_id FROM CLASS taskmigratedemo.ReportLocation;
+2019-12-16 08:54:36:
+2019-12-16 08:54:36:CREATE PROCEDURE DIRECTED FROM CLASS taskmigratedemo.FindStaleDroneReports;
+2019-12-16 08:54:36:
+2019-12-16 08:54:36:CREATE PROCEDURE GetDrone PARTITION ON TABLE drone_locations COLUMN drone_id AS SELECT * FROM drone_locations  WHERE drone_id = ? ORDER BY event_timestamp DESC;
+2019-12-16 08:54:36:
+2019-12-16 08:54:37:CREATE PROCEDURE GetStatus AS BEGIN SELECT Activity_minute last_active, how_many FROM drone_activity ORDER BY activity_minute; SELECT HOW_MANY FROM missing_drone_stats WHERE DECLARE_MISSING_DATE IS NULL ORDER BY declare_missing_date; END;
+2019-12-16 08:54:37:
+2019-12-16 08:54:37:CREATE TASK findStaleDronesTask ON SCHEDULE DELAY 250 MILLISECONDS PROCEDURE FindStaleDroneReports ON ERROR LOG RUN ON PARTITIONS;
+2019-12-16 08:54:37:
+````
+
+It then sends ReportLocation messages to the server, at a rate of 'tps' per second. Every 100,000 events we call GetStatus, which show how many drones have been active over the last few minutes and how many appear to be missing:
+
+````
+2019-12-16 08:54:37:Starting test run at 30000 transactions per second for 1800 seconds
+2019-12-16 08:54:41:Transaction #100000
+2019-12-16 08:54:41:Drone Activity By Minute:
+2019-12-16 08:54:41:
+LAST_ACTIVE                 HOW_MANY 
+--------------------------- ---------
+2019-12-16 08:54:00.000000     100000
+
+2019-12-16 08:54:41:Missing Drones By Minute:
+2019-12-16 08:54:41:
+HOW_MANY 
+---------
+    36225
+
+2019-12-16 08:54:45:Transaction #200000
+2019-12-16 08:54:45:Drone Activity By Minute:
+2019-12-16 08:54:45:
+LAST_ACTIVE                 HOW_MANY 
+--------------------------- ---------
+2019-12-16 08:54:00.000000     200000
+
+2019-12-16 08:54:45:Missing Drones By Minute:
+2019-12-16 08:54:45:
+HOW_MANY 
+---------
+    69825
+````
+
  
  
  
