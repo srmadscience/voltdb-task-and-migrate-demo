@@ -50,7 +50,7 @@ This finds any drones that have failed to report for too long a time period and 
 
 ### VoltDB
 
-See here.
+See [here](https://www.voltdb.com/try-voltdb/).
 
 ### Dependencies
 
@@ -58,7 +58,7 @@ This project needs voltdb-schemabuilder.
 
 ### Configure Export Streams
 
-In order to fully observe the functionality of this demo you'll need to get export up and running. This can be done in two ways
+In order to fully observe the functionality of this demo you'll need to get export up and running. This can be done in two ways:
 
 #### Configure Streams from within the VoltDB GUI
 
