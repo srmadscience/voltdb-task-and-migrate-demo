@@ -205,7 +205,7 @@ HOW_MANY
 
 As the demo progresses the Export tab will show records being written:
 
-![export_tab](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/doc/tables_and_procedures_when_running.png)
+![export_tab](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/doc/export_streams_when_running.png)
 
  
  
