@@ -64,11 +64,15 @@ In order to fully observe the functionality of this demo you'll need to get expo
 
 #### Configure Streams from within the VoltDB GUI
 
+This can be done by going to the Admin tab of the VoltDB GUI and creating entries like these:
+
 ![Image of streams being configured](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/doc/export_streams_parameters.png)
 
+Note that you'll need to change 'outdir' to a directory that exists on your computer. You could also set this up to go to Kafka (for example) by selecting it from the 'type' dropdown.
 
 #### Configure streams by shutting down the database and editing deployment.xml
 
+An alternative approach is to shut down VoltDB and then add the following entries to the database's [deployment.xml[(https://docs.voltdb.com/UsingVoltDB/AppxConfigFile.php) configuration file:
 
 ````
  <export>
@@ -89,6 +93,9 @@ In order to fully observe the functionality of this demo you'll need to get expo
         </configuration>
     </export>
  ````
+ 
+ When you restart the database the export configuration should look like the one above.
+ 
  
  ### Run the code
  
