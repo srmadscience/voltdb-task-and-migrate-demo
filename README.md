@@ -104,7 +104,7 @@ An alternative approach is to shut down VoltDB and then add the following entrie
  | Parameter | Purpose | Example |
  | ---       | ---     | ---     |
  | hostnames | comma delimited list of VoltDB hosts | 127.0.0.1 |
- | tps | How many transactions per second to generate | 30000 |
+ | tps | How many transactions per second to generate | 50000 |
  | size | How many drones to track | 1000000 |
  | seconds | How many seconds to run for | 180 |
  
@@ -113,6 +113,8 @@ An alternative approach is to shut down VoltDB and then add the following entrie
  ```
  TaskMigrateDemoClient 192.168.0.50,192.168.0.51 50000 10000000 1800
  ````
+ 
+ Note that you may have to try various combinations of tps and size to get interesting results. The higher tps is the more records get written to  'drone_locations', and the higher the value of 'size' the more likely it is that locations will get old enough to be flagged as 'missing' and reported to 'missing_drones'.
  
  When running it calls the procedure [GetStatus]() every 100,000 iterations, so you can see aggregate information about what is going on.
  
@@ -208,4 +210,30 @@ As the demo progresses the Export tab will show records being written:
 ![export_tab](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/doc/export_streams_when_running.png)
 
  
+Meanwhile if you look at the directory you requested the file exporter to write to you'll see files being written:
+
+````
+Davids-MacBook-Pro-7:csv drolfe$ pwd
+/Users/drolfe/csv
+Davids-MacBook-Pro-7:csv drolfe$ ls -altr
+total 6457160
+drwxr-xr-x+ 150 drolfe  staff        4800 Dec 16 07:54 ..
+-rw-r--r--    1 drolfe  staff       77275 Dec 16 09:13 active-location_incursions_tgt-3165364684111183871-LOCATION_INCURSIONS-20191216085435.csv
+drwxr-xr-x    5 drolfe  staff         160 Dec 16 09:15 .
+-rw-r--r--    1 drolfe  staff  1834891267 Dec 16 09:22 active-tgt_missing_drones-3165364684111183871-MISSING_DRONES-20191216085435.csv
+-rw-r--r--    1 drolfe  staff  1457170935 Dec 16 09:22 active-old_drone_locations_tgt-3165364684111183871-DRONE_LOCATIONS-20191216085435.csv
+````
+
+And a peek inside the LOCATION_INCURSIONS file shows that someone has got too close to Buckingham Palace:
+
+````
+"3619671939874816","1199522942031414","57","0","0","1","15","2019-12-16 09:13:51.414","POINT (-0.1436013 51.5013606)","2","Buckingham Palace","934"
+"3619671939891200","1199522942031417","58","0","0","1","21","2019-12-16 09:13:51.417","POINT (-0.1436013 51.5013606)","3","Buckingham Palace","940"
+"3619671939907584","1199522942031422","59","0","0","1","34","2019-12-16 09:13:51.422","POINT (-0.1436013 51.5013606)","7","Buckingham Palace","958"
+"3619671939923968","1199522942031423","60","0","0","1","38","2019-12-16 09:13:51.423","POINT (-0.1436013 51.5013606)","3","Buckingham Palace","965"
+"3619671939940352","1199522942031424","61","0","0","1","40","2019-12-16 09:13:51.424","POINT (-0.1436013 51.5013606)","9","Buckingham Palace","969"
+"3619671939956736","1199522942031424","62","0","0","1","41","2019-12-16 09:13:51.424","POINT (-0.1436013 51.5013606)","5","Buckingham Palace","971"
+````
+
+
  
