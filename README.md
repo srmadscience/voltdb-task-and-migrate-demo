@@ -2,14 +2,14 @@
 
 This demo showcases some VoltDB features:
 
-* The MIGRATE command
-* Directed Procedures and Scheduled Tasks
+* The [MIGRATE](https://docs.voltdb.com/UsingVoltDB/sqlref_migrate.php) command.
+* [Directed Procedures](https://docs.voltdb.com/UsingVoltDB/SimpleDirectedProcs.php) and Scheduled [Tasks](https://docs.voltdb.com/UsingVoltDB/ddlref_createtask.php).
 
 ## Scenario 
 
 We are pretending to be a system for detecting rogue drones in central London. Various locations 
 are forbidden to drones. We need to raise the alarm if a drone gets too close to one of these locations.
-We also need to raise an alarm if we stop getting reports for a drone.
+We also need to raise an alarm if we stop getting reports for a drone. We are expecting 10's of thousands of position reports per second.
 
 ## Schema
 
@@ -35,16 +35,16 @@ The application has two stored procedures
 
 ### ReportLocation
 
-This takes a position report for a drone and updates the database. It also:
+[ReportLocation](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/src/taskmigratedemo/ReportLocation.java) takes a position report for a drone and updates the database. It also:
 
 * Checks to see if the drone is too close to an important_location.
-* MIGRATES any extra drone_location records
+* [MIGRATES](https://docs.voltdb.com/UsingVoltDB/sqlref_migrate.php) any extra drone_location records
 
 This is called repeatedly from the demo's client program.
 
 ### FindStaleDroneReports
 
-This finds any drones that have failed to report for too long a time period and writes a message to missing_drone_stats. It also updates the drone record to prevent duplicate reports.
+[FindStaleDroneReports](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/src/taskmigratedemo/FindStaleDroneReports.java) finds any drones that have failed to report for too long a time period and writes a message to missing_drone_stats. It also updates the drone record to prevent duplicate reports. FindStaleDroneReports is run as a [TASK](https://docs.voltdb.com/UsingVoltDB/ddlref_createtask.php) every 250 milliseconds
 
 ## Installation and setup
 
@@ -54,7 +54,7 @@ See [here](https://www.voltdb.com/try-voltdb/).
 
 ### Dependencies
 
-This project needs voltdb-schemabuilder.
+This project needs [voltdb-schemabuilder](https://github.com/srmadscience/voltdb-schemabuilder).
 
 ### Configure Export Streams
 
