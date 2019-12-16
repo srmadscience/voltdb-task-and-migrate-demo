@@ -31,9 +31,11 @@ We have the following tables, views and export streams:
 
 ## Procedures
 
-The application has two stored procedures
+The application has two stored procedures: 
 
 ### ReportLocation
+
+'ReportLocation' is fed mock data by the test client ([TaskMigrateDemoClient](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/src/org/voltdb/tastmigratedemo/TaskMigrateDemoClient.java)), but in a real world deployment would be configured to read messages from a queue such as Kafka or Kinesis.
 
 [ReportLocation](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/src/taskmigratedemo/ReportLocation.java) takes a position report for a drone and updates the database. It also:
 
@@ -61,6 +63,9 @@ This project needs [voltdb-schemabuilder](https://github.com/srmadscience/voltdb
 In order to fully observe the functionality of this demo you'll need to get export up and running. This can be done in two ways:
 
 #### Configure Streams from within the VoltDB GUI
+
+![Image of streams being configured](https://github.com/srmadscience/voltdb-task-and-migrate-demo/blob/master/doc/export_streams_parameters.png)
+
 
 #### Configure streams by shutting down the database and editing deployment.xml
 
