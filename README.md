@@ -235,5 +235,7 @@ And a peek inside the LOCATION_INCURSIONS file shows that someone has got too cl
 "3619671939956736","1199522942031424","62","0","0","1","41","2019-12-16 09:13:51.424","POINT (-0.1436013 51.5013606)","5","Buckingham Palace","971"
 ````
 
+## Conclusion
 
+In this demo we've shown how you can use VoltDB to create a fast, scalable application that takes important, stateful decisions in real time.  
  
