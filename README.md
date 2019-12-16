@@ -237,5 +237,5 @@ And a peek inside the LOCATION_INCURSIONS file shows that someone has got too cl
 
 ## Conclusion
 
-In this demo we've shown how you can use VoltDB to create a fast, scalable application that takes important, stateful decisions in real time.  
+In this demo we've shown how you can use VoltDB to create a fast, scalable application that takes important, stateful decisions in real time. In addition to showing how we can can correlate the latest position of a device with its proximity to a location we also show how we can take *smart* decisions, such as reporting a device as missing once (and only once).   
  
