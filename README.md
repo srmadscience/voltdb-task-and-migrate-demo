@@ -72,7 +72,7 @@ Note that you'll need to change 'outdir' to a directory that exists on your comp
 
 #### Configure streams by shutting down the database and editing deployment.xml
 
-An alternative approach is to shut down VoltDB and then add the following entries to the database's [deployment.xml[(https://docs.voltdb.com/UsingVoltDB/AppxConfigFile.php) configuration file:
+An alternative approach is to shut down VoltDB and then add the following entries to the database's [deployment.xml](https://docs.voltdb.com/UsingVoltDB/AppxConfigFile.php) configuration file:
 
 ````
  <export>
